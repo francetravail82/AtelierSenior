@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stéphanie · Atelier Senior</title>
+<link rel="stylesheet" href="profil.css">
+</head>
+<body data-page="stephanie.html">
+
+<header>
+  <div class="meWrap">
+    <button class="me glass" id="switch" title="Changer de profil" aria-haspopup="true" aria-expanded="false">
+      <div class="av" id="meAvatar"></div><span id="meName"></span><span class="caret">▾</span>
+    </button>
+    <div class="menu hidden" id="menu" role="menu"></div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow"><div class="av" id="heroAvatar"></div><span id="heroWho"></span></div>
+  <h2 id="heroTitle"></h2>
+  <p>Choisis une vidéo ci-dessous pour la lancer.</p>
+  <button class="btn glass" id="heroPlay">▶ Lecture</button>
+</section>
+
+<div id="rows"></div>
+<div class="pad"></div>
+
+<div id="player" class="hidden">
+  <div class="box">
+    <button class="close glass" id="closePlayer" aria-label="Fermer">✕</button>
+    <div id="playerMedia"></div>
+    <h4 id="playerTitle"></h4>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="profil.js"></script>
+</body>
+</html>

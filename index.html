@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atelier Senior</title>
+<style>
+:root{--bg:#141414;--fg:#fff;--muted:#b3b3b3;--red:#0070c0;--dome:clamp(60px,9vw,110px);--curve:clamp(70px,12vw,130px);--drop:0px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#20206f;font-family:"Helvetica Neue",Arial,sans-serif}
+.hidden{display:none!important}
+/* Accueil : fond blanc + logos en "feu d'artifice", carrousel pleine largeur, profils sur panneau bleu */
+#profiles{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;background:#f1eaf9;color:#20206f;text-align:center}
+.foot{position:relative;z-index:1;margin-top:auto;background:#fff;display:flex;justify-content:center;padding:26px 4% calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 -1px 0 #69408c1a}
+.brand{display:flex;align-items:center;justify-content:center;gap:12px}
+.brand img{height:clamp(34px,5vw,48px);display:block}
+.brand .wm{font-weight:800;font-size:clamp(18px,3vw,26px);letter-spacing:.3px;color:#20206f}
+.carousel{position:relative;z-index:1;width:100%;height:calc(min(56.25vw,68vh,760px) + var(--drop));overflow:hidden;background:#20206f}
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .7s;background-size:cover;background-position:center 25%;color:#fff;text-align:left}
+.slide.on{opacity:1}
+.slide .bg{position:absolute;inset:0;background-size:cover;background-position:center 25%;transform:scale(1);transition:transform 0s linear .8s;will-change:transform}
+.slide.on .bg{transform:scale(1.14);transition:transform 9s linear}
+@media (prefers-reduced-motion:reduce){.slide.on .bg{transform:none;transition:none}}
+.slide .cap{position:absolute;left:0;right:0;bottom:0;padding:80px 5% calc(var(--dome) + 28px);background:linear-gradient(0deg,#0a0a3acc,#0000);font-size:clamp(18px,3.2vw,32px);font-weight:700}
+.slide .cap small{display:block;color:#e6ecff;font-weight:400;font-size:clamp(12px,1.6vw,16px);margin-top:4px}
+.nav{position:absolute;top:calc((100% - var(--dome)) / 2);transform:translateY(-50%);z-index:3;width:48px;height:48px;border-radius:50%;border:1px solid #ffffff73;background:#ffffff2e;-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);box-shadow:0 4px 18px #0a0a3a40,inset 0 1px 0 #ffffff66;color:#fff;font-size:26px;line-height:1;cursor:pointer;transition:background .2s,transform .2s}
+.nav:hover{background:#ffffff59}
+.nav:active{transform:translateY(-50%) scale(.94)}
+.nav.prev{left:2%}.nav.next{right:2%}
+.dots{position:absolute;bottom:calc(var(--dome) + 20px);left:0;right:0;z-index:3;display:flex;gap:8px;justify-content:center}
+.dots button{width:9px;height:9px;padding:0;border-radius:50%;border:0;background:#fff8;cursor:pointer}
+.dots button.on{background:#fff;width:24px;border-radius:5px}
+.panelSlot{position:relative;z-index:2;width:fit-content;max-width:calc(100% - 16px);margin:calc(var(--dome) * -1) auto clamp(36px,7vh,64px)}
+.panelWrap{filter:drop-shadow(0 18px 22px #69408c66)}
+.panel{border-radius:50% 50% 44px 44px / var(--curve) var(--curve) 44px 44px;
+  background:radial-gradient(circle 120px at 24% 62%,#ff7fbf8c,#ff7fbf00),radial-gradient(circle 120px at 76% 66%,#0a8de099,#0a8de000),radial-gradient(circle 110px at 50% 92%,#ffe03047,#ffe03000),#69408C;
+  padding:22px clamp(18px,4vw,52px) clamp(26px,4vh,38px)}
+/* Apparition : une bulle monte du bas de l'écran, grossit en bloc, puis les profils apparaissent */
+@keyframes bubbleRise{
+  0%{transform:translateY(var(--rise,100vh));animation-timing-function:cubic-bezier(.22,.75,.3,1)}
+  78%{transform:translateY(-14px);animation-timing-function:ease-in-out}
+  100%{transform:translateY(0)}
+}
+@keyframes bubbleGrow{
+  0%{clip-path:circle(5% at 50% 100%)}
+  100%{clip-path:circle(115% at 50% 100%)}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes popIn{0%{opacity:0;transform:translateY(26px) scale(.6)}100%{opacity:1;transform:none}}
+.panelWrap{animation:bubbleRise 1.7s linear .1s backwards paused}
+.panel{animation:bubbleGrow 1.5s cubic-bezier(.3,.7,.2,1) .1s backwards paused}
+.panel h2{animation:fadeUp .7s ease-out 1.05s backwards paused}
+.profile{animation:popIn .75s cubic-bezier(.2,1.5,.4,1) backwards paused}
+.profile:nth-child(1){animation-delay:1.1s}
+.profile:nth-child(2){animation-delay:1.25s}
+.profile:nth-child(3){animation-delay:1.4s}
+.panelWrap.go,.panelWrap.go .panel,.panelWrap.go h2,.panelWrap.go .profile{animation-play-state:running}
+@media (prefers-reduced-motion:reduce){.panelWrap,.panel,.panel h2,.profile{animation:none!important}}
+.panel h2{margin:0 0 18px;line-height:1.1;font-size:clamp(26px,4.4vw,44px);font-weight:700;color:#fff;text-shadow:0 2px 12px #0000004d}
+.grid{display:flex;flex-wrap:nowrap;gap:clamp(10px,3vw,32px);justify-content:center}
+.profile{position:relative;display:block;cursor:pointer;text-decoration:none;width:clamp(84px,26vw,160px);padding:8px 8px 10px;border-radius:26px;border:1px solid #ffffff8c;
+  background:linear-gradient(145deg,#ffffff57,#ffffff14);
+  -webkit-backdrop-filter:blur(22px) saturate(190%);backdrop-filter:blur(22px) saturate(190%);
+  box-shadow:0 14px 34px #1408284d,inset 0 1px 0 #ffffffbf,inset 0 -1px 0 #ffffff26,inset 0 0 24px #ffffff1f;
+  color:#fff;font-size:clamp(14px,2vw,18px);font-weight:600;text-shadow:0 1px 6px #00000059;transition:transform .2s,background .2s,box-shadow .2s}
+.profile::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(160deg,#ffffff4d 0%,#ffffff00 36%)}
+.avatar{width:100%;aspect-ratio:1;border-radius:17px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:clamp(36px,7vw,64px);font-weight:700;color:#fff;border:0;transition:.15s}
+.profile:hover,.profile:focus-visible{outline:none;transform:translateY(-5px);background:linear-gradient(145deg,#ffffff75,#ffffff24);box-shadow:0 20px 40px #14082866,inset 0 1px 0 #fff,inset 0 -1px 0 #ffffff33,inset 0 0 26px #ffffff2e}
+.profile:focus-visible{box-shadow:0 0 0 3px #fff,0 20px 40px #14082866}
+.profile span{display:block;margin-top:10px}
+@media(max-width:640px){
+  .carousel{height:calc(min(100vw,68vh) + var(--drop))}
+  .nav{width:40px;height:40px;font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE D'ACCUEIL : carrousel + choix du profil (chaque profil ouvre sa propre page) -->
+<section id="profiles">
+  <div class="carousel" id="carousel">
+    <div id="slides"></div>
+    <button class="nav prev" id="prev" aria-label="Précédent">‹</button>
+    <button class="nav next" id="next" aria-label="Suivant">›</button>
+    <div class="dots" id="dots"></div>
+  </div>
+  <div class="panelSlot" id="panelSlot">
+    <div class="panelWrap" id="panelWrap">
+      <div class="panel">
+        <h2>Qui regarde ?</h2>
+        <div class="grid" id="profileGrid"></div>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><div class="brand" id="brand"></div></footer>
+</section>
+
+<script src="config.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+/* Logo France Travail (SVG vectoriel intégré) dans le pied de page */
+const LOGO = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjQ0LjAgMjguMyA3ODguMiA4ODMuMCI+PGNpcmNsZSBjeD0iNDM4LjgiIGN5PSIxMDcuNSIgcj0iNzcuMiIgZmlsbD0iIzAwN0RDNCIvPjxjaXJjbGUgY3g9IjYxNS4xIiBjeT0iNTc1LjgiIHI9IjcyLjgiIGZpbGw9IiMwMDdEQzQiLz48Y2lyY2xlIGN4PSIxMTkuNiIgY3k9IjY1My41IiByPSI3My42IiBmaWxsPSIjMDA3REM0Ii8+PGNpcmNsZSBjeD0iMTE5LjkiIGN5PSIyODcuNCIgcj0iNzIuOCIgZmlsbD0iIzI1Mjg3MCIvPjxjaXJjbGUgY3g9Ijc1Ny4zIiBjeT0iMjg3LjMiIHI9IjcyLjgiIGZpbGw9IiMyNTI4NzAiLz48Y2lyY2xlIGN4PSI2MTcuNiIgY3k9IjM3OS4wIiByPSI3Mi43IiBmaWxsPSIjMjUyODcwIi8+PGNpcmNsZSBjeD0iMjU5LjQiIGN5PSI1NzkuOSIgcj0iNzIuOCIgZmlsbD0iIzI1Mjg3MCIvPjxjaXJjbGUgY3g9Ijc1Ny40IiBjeT0iNjUzLjgiIHI9IjcyLjgiIGZpbGw9IiMyNTI4NzAiLz48Y2lyY2xlIGN4PSI2NDEuMCIgY3k9IjcyNy4zIiByPSI0MS4yIiBmaWxsPSIjMjUyODcwIi8+PGNpcmNsZSBjeD0iNDM5LjAiIGN5PSI4MzYuMyIgcj0iNzIuOSIgZmlsbD0iIzI1Mjg3MCIvPjxjaXJjbGUgY3g9IjU0My41IiBjeT0iMjMxLjQiIHI9IjM4LjYiIGZpbGw9IiNGNUEwQzgiLz48Y2lyY2xlIGN4PSIyNjguMCIgY3k9IjM3OS45IiByPSI3MC44IiBmaWxsPSIjRjVBMEM4Ii8+PGNpcmNsZSBjeD0iNDM5LjEiIGN5PSI2NjIuMyIgcj0iNzAuOCIgZmlsbD0iI0Y1QTBDOCIvPjxjaXJjbGUgY3g9IjMxNS4wIiBjeT0iMjA2LjAiIHI9IjQxLjEiIGZpbGw9IiNGRkUwMzAiLz48Y2lyY2xlIGN4PSI2ODQuNSIgY3k9IjUwMy45IiByPSI0MC41IiBmaWxsPSIjRkZFMDMwIi8+PGNpcmNsZSBjeD0iMjcwLjIiIGN5PSI2OTIuMSIgcj0iNDAuOCIgZmlsbD0iI0ZGRTAzMCIvPjxjaXJjbGUgY3g9IjQyMi43IiBjeT0iMjg1LjciIHI9IjQwLjMiIGZpbGw9IiNFQzFDMjQiLz48Y2lyY2xlIGN4PSIxNDMuMyIgY3k9IjQyNC42IiByPSI0MC41IiBmaWxsPSIjRUMxQzI0Ii8+PGNpcmNsZSBjeD0iNzIyLjgiIGN5PSI0MjQuOCIgcj0iMjcuMyIgZmlsbD0iI0VDMUMyNCIvPjxjaXJjbGUgY3g9IjU1OS40IiBjeT0iNzI3LjMiIHI9IjQwLjUiIGZpbGw9IiNFQzFDMjQiLz48Y2lyY2xlIGN4PSI0MjkuMiIgY3k9IjQ1NS4yIiByPSIxMjguOCIgZmlsbD0iIzAwN0RDNCIvPjwvc3ZnPg==";
+(function(){
+  const b = $("brand");
+  const i = document.createElement("img"); i.src = LOGO; i.alt = ""; b.appendChild(i);
+  const t = document.createElement("span"); t.className = "wm"; t.textContent = "France Travail"; b.appendChild(t);
+})();
+
+/* Profils : chaque carte est un lien vers la page du profil */
+PROFILES.forEach(p=>{
+  const a = document.createElement("a");
+  a.className = "profile";
+  a.href = p.page;
+  a.innerHTML = `<div class="avatar"></div><span></span>`;
+  a.querySelector("span").textContent = p.name;
+  paintAvatar(a.querySelector(".avatar"), p);
+  $("profileGrid").appendChild(a);
+});
+
+/* Carrousel de la page d'accueil */
+(function(){
+  const slides=$("slides"), dots=$("dots"), palette=["#0070c0","#20206f","#c2478a","#0a4a8a","#8a3a7a"];
+  let idx=0, timer;
+  VIDEOS.forEach((v,i)=>{
+    const b=document.createElement("div"); b.className="slide";
+    { const g=`linear-gradient(${120+i*30}deg,${palette[i%palette.length]},#111 80%)`; const bg=document.createElement("div"); bg.className="bg"; bg.setAttribute("style", v.thumb?`background-image:url("${v.thumb}"),${g}`:`background-image:${g}`); b.appendChild(bg); }
+    b.insertAdjacentHTML("beforeend",'<div class="cap"></div>');
+    b.querySelector(".cap").innerHTML="";
+    const t=document.createElement("span"); t.textContent=v.title;
+    const sm=document.createElement("small"); sm.textContent=(i+1)+" / "+VIDEOS.length;
+    b.querySelector(".cap").append(t,sm);
+    slides.appendChild(b);
+    const d=document.createElement("button"); d.setAttribute("aria-label","Vidéo "+(i+1)); d.onclick=()=>{go(i);restart();};
+    dots.appendChild(d);
+  });
+  function go(n){
+    idx=(n+VIDEOS.length)%VIDEOS.length;
+    [...slides.children].forEach((e,i)=>e.classList.toggle("on",i===idx));
+    [...dots.children].forEach((e,i)=>e.classList.toggle("on",i===idx));
+  }
+  function restart(){clearInterval(timer);timer=setInterval(()=>go(idx+1),6500);}
+  $("prev").onclick=()=>{go(idx-1);restart();};
+  $("next").onclick=()=>{go(idx+1);restart();};
+  let sx=null;   /* balayage au doigt */
+  $("carousel").addEventListener("touchstart",e=>{sx=e.touches[0].clientX;},{passive:true});
+  $("carousel").addEventListener("touchend",e=>{
+    if(sx===null) return;
+    const dx=e.changedTouches[0].clientX-sx; sx=null;
+    if(Math.abs(dx)>40){ go(idx+(dx<0?1:-1)); restart(); }
+  },{passive:true});
+  $("carousel").onmouseenter=()=>clearInterval(timer);
+  $("carousel").onmouseleave=restart;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>go(0)));   /* laisse le navigateur peindre l'état initial pour que le zoom démarre */
+  restart();
+})();
+
+
+/* La bulle part du bas de l'écran et monte jusqu'à sa place ; elle démarre quand elle devient visible */
+(function(){
+  const wrap=$("panelWrap");
+  function setRise(){
+    const r=$("panelSlot").getBoundingClientRect();   /* position finale (la bulle, elle, est décalée) */
+    wrap.style.setProperty("--rise", Math.max(120, innerHeight - r.top + 40) + "px");
+  }
+  if(!("IntersectionObserver" in window)){ wrap.classList.add("go"); return; }
+  new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting && !wrap.classList.contains("go")){ setRise(); wrap.classList.add("go"); } });
+  },{threshold:.35}).observe($("panelSlot"));
+})();
+</script>
+</body>
+</html>
